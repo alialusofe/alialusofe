@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ali AlYoussef Platform - Chemistry Tests</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .app-container {
+            width: 375px;
+            height: 667px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 20px;
+            height: calc(100% - 120px);
+            overflow-y: auto;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .welcome-section h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .welcome-section p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+
+        .stat-card h3 {
+            color: #4CAF50;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .chapter-list {
+            margin-bottom: 20px;
+        }
+
+        .chapter-item {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chapter-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .chapter-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        .chapter-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 6px;
+            margin: 8px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .start-test-btn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .start-test-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: around;
+            padding: 10px 0;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .nav-item.active {
+            color: #4CAF50;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            margin: 0 auto 5px;
+            background: currentColor;
+            border-radius: 50%;
+        }
+
+        .quiz-container {
+            display: none;
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .question-counter {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .question {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .options {
+            margin-bottom: 20px;
+        }
+
+        .option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            background: #e3f2fd;
+            border-color: #4CAF50;
+        }
+
+        .option.selected {
+            background: #e8f5e8;
+            border-color: #4CAF50;
+            color: #2e7d32;
+        }
+
+        .quiz-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .results-container {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: conic-gradient(#4CAF50 0deg 216deg, #e0e0e0 216deg 360deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            position: relative;
+        }
+
+        .score-inner {
+            width: 90px;
+            height: 90px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .score-percentage {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .score-text {
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>منصة علي اليوسفي</h1>
+            <p>Ali AlYoussef Chemistry Platform</p>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content" id="homeScreen">
+            <div class="welcome-section">
+                <h2>اختبارات الكيمياء - الثاني متوسط</h2>
+                <p>Chemistry Tests for 2nd Intermediate - Gifted Schools</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>85%</h3>
+                    <p>متوسط الدرجات</p>
+                </div>
+                <div class="stat-card">
+                    <h3>12</h3>
+                    <p>الاختبارات المكتملة</p>
+                </div>
+            </div>
+
+            <div class="chapter-list">
+                <div class="chapter-item" onclick="startQuiz('atoms')">
+                    <div class="chapter-title">Chapter 1: Atomic Structure</div>
+                    <div class="chapter-info">
+                        <span>15 Questions</span>
+                        <span>⏱️ 20 min</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 90%"></div>
+                    </div>
+                </div>
+
+                <div class="chapter-item" onclick="startQuiz('periodic')">
+                    <div class="chapter-title">Chapter 2: Periodic Table</div>
+                    <div class="chapter-info">
+                        <span>20 Questions</span>
+                        <span>⏱️ 25 min</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 75%"></div>
+                    </div>
+                </div>
+
+                <div class="chapter-item" onclick="startQuiz('bonding')">
+                    <div class="chapter-title">Chapter 3: Chemical Bonding</div>
+                    <div class="chapter-info">
+                        <span>18 Questions</span>
+                        <span>⏱️ 22 min</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 45%"></div>
+                    </div>
+                </div>
+
+                <div class="chapter-item" onclick="startQuiz('reactions')">
+                    <div class="chapter-title">Chapter 4: Chemical Reactions</div>
+                    <div class="chapter-info">
+                        <span>25 Questions</span>
+                        <span>⏱️ 30 min</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 20%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div class="quiz-container" id="quizScreen">
+            <div class="quiz-header">
+                <div class="question-counter" id="questionCounter">Question 1 of 10</div>
+                <div style="font-weight: 600; color: #4CAF50;">Chapter 1: Atomic Structure</div>
+            </div>
+
+            <div class="question" id="questionText">
+                Which of the following particles has a negative charge?
+            </div>
+
+            <div class="options" id="optionsContainer">
+                <div class="option" onclick="selectOption(0)">A) Proton</div>
+                <div class="option" onclick="selectOption(1)">B) Neutron</div>
+                <div class="option" onclick="selectOption(2)">C) Electron</div>
+                <div class="option" onclick="selectOption(3)">D) Nucleus</div>
+            </div>
+
+            <div class="quiz-buttons">
+                <button class="btn btn-secondary" onclick="previousQuestion()">السابق</button>
+                <button class="btn btn-primary" onclick="nextQuestion()" id="nextBtn">التالي</button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div class="results-container" id="resultsScreen">
+            <h2 style="color: #333; margin-bottom: 20px;">نتيجة الاختبار</h2>
+            <div class="score-circle">
+                <div class="score-inner">
+                    <div class="score-percentage" id="scorePercentage">85%</div>
+                    <div class="score-text">Score</div>
+                </div>
+            </div>
+            <div style="margin: 20px 0;">
+                <p style="color: #666; margin: 5px 0;">الإجابات الصحيحة: <span style="color: #4CAF50; font-weight: bold;" id="correctAnswers">17/20</span></p>
+                <p style="color: #666; margin: 5px 0;">الوقت المستغرق: <span style="font-weight: bold;" id="timeSpent">18:45</span></p>
+            </div>
+            <button class="start-test-btn" onclick="goHome()">العودة للرئيسية</button>
+            <button class="start-test-btn" onclick="reviewAnswers()" style="margin-top: 10px; background: #2196F3;">مراجعة الإجابات</button>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="showHome()">
+                <div class="nav-icon"></div>
+                <div>الرئيسية</div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon"></div>
+                <div>النتائج</div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon"></div>
+                <div>الإعدادات</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 0;
+        let selectedOption = -1;
+        let score = 0;
+        let startTime;
+
+        const sampleQuestions = {
+            atoms: [
+                {
+                    question: "Which of the following particles has a negative charge?",
+                    options: ["A) Proton", "B) Neutron", "C) Electron", "D) Nucleus"],
+                    correct: 2
+                },
+                {
+                    question: "The atomic number represents the number of:",
+                    options: ["A) Neutrons", "B) Protons", "C) Electrons", "D) Atoms"],
+                    correct: 1
+                },
+                {
+                    question: "Which scientist proposed the nuclear model of the atom?",
+                    options: ["A) Dalton", "B) Thomson", "C) Rutherford", "D) Bohr"],
+                    correct: 2
+                },
+                {
+                    question: "The maximum number of electrons in the second shell is:",
+                    options: ["A) 2", "B) 8", "C) 18", "D) 32"],
+                    correct: 1
+                },
+                {
+                    question: "Isotopes have the same number of __ but different numbers of __:",
+                    options: ["A) Protons, electrons", "B) Protons, neutrons", "C) Electrons, protons", "D) Neutrons, protons"],
+                    correct: 1
+                }
+            ]
+        };
+
+        let currentQuestions = [];
+
+        function startQuiz(chapter) {
+            currentQuestions = sampleQuestions[chapter] || sampleQuestions.atoms;
+            currentQuestion = 0;
+            selectedOption = -1;
+            score = 0;
+            startTime = new Date();
+            
+            document.getElementById('homeScreen').style.display = 'none';
+            document.getElementById('quizScreen').style.display = 'block';
+            document.getElementById('resultsScreen').style.display = 'none';
+            
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentQuestion >= currentQuestions.length) {
+                showResults();
+                return;
+            }
+
+            const question = currentQuestions[currentQuestion];
+            document.getElementById('questionCounter').textContent = `Question ${currentQuestion + 1} of ${currentQuestions.length}`;
+            document.getElementById('questionText').textContent = question.question;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.textContent = option;
+                optionDiv.onclick = () => selectOption(index);
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            selectedOption = -1;
+            updateNextButton();
+        }
+
+        function selectOption(index) {
+            selectedOption = index;
+            
+            const options = document.querySelectorAll('.option');
+            options.forEach((option, i) => {
+                option.classList.toggle('selected', i === index);
+            });
+            
+            updateNextButton();
+        }
+
+        function updateNextButton() {
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.textContent = currentQuestion === currentQuestions.length - 1 ? 'إنهاء' : 'التالي';
+            nextBtn.disabled = selectedOption === -1;
+        }
+
+        function nextQuestion() {
+            if (selectedOption === -1) return;
+            
+            if (selectedOption === currentQuestions[currentQuestion].correct) {
+                score++;
+            }
+            
+            currentQuestion++;
+            loadQuestion();
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+            }
+        }
+
+        function showResults() {
+            const percentage = Math.round((score / currentQuestions.length) * 100);
+            const endTime = new Date();
+            const duration = Math.round((endTime - startTime) / 1000);
+            const minutes = Math.floor(duration / 60);
+            const seconds = duration % 60;
+            
+            document.getElementById('homeScreen').style.display = 'none';
+            document.getElementById('quizScreen').style.display = 'none';
+            document.getElementById('resultsScreen').style.display = 'block';
+            
+            document.getElementById('scorePercentage').textContent = percentage + '%';
+            document.getElementById('correctAnswers').textContent = `${score}/${currentQuestions.length}`;
+            document.getElementById('timeSpent').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Update score circle
+            const degrees = (percentage / 100) * 360;
+            const scoreCircle = document.querySelector('.score-circle');
+            scoreCircle.style.background = `conic-gradient(#4CAF50 0deg ${degrees}deg, #e0e0e0 ${degrees}deg 360deg)`;
+        }
+
+        function goHome() {
+            document.getElementById('homeScreen').style.display = 'block';
+            document.getElementById('quizScreen').style.display = 'none';
+            document.getElementById('resultsScreen').style.display = 'none';
+        }
+
+        function reviewAnswers() {
+            alert('ميزة مراجعة الإجابات قيد التطوير');
+        }
+
+        function showHome() {
+            goHome();
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            goHome();
+        });
+    </script>
+</body>
+</html>
